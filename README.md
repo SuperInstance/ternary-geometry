@@ -109,6 +109,22 @@ println!("On segment: {}", point_on_segment(&TernaryPoint::new_2d(1, 1), &line))
 3. **Territory partitioning** — Assign ternary grid cells to nearest facilities using Voronoi diagrams
 4. **Pattern recognition** — Measure similarity between ternary patterns with appropriate distance metrics
 
+## Known Limitations
+
+- **Coordinate space is {0, 1, 2}, not {-1, 0, +1}**: Unlike most ternary crates in this ecosystem that use the balanced ternary {-1, 0, +1} representation, this crate uses non-negative coordinates {0, 1, 2}. Converting between this crate's `TernaryPoint` and the balanced ternary used by other crates requires a manual offset (`x - 1`).
+
+- **Grid exhaustively enumerated — only 9 (2D) or 27 (3D) points**: All algorithms (Voronoi, convex hull) enumerate the full grid, which means they cannot generalize to larger ternary spaces or different coordinate ranges. The crate is fundamentally limited to exactly 3 values per dimension.
+
+- **`convex_hull_2d()` uses gift wrapping on at most 9 points**: The gift-wrapping algorithm runs on the 9-point 2D grid. For this tiny domain, any hull algorithm is instant, but the implementation doesn't exploit the known structure of the ternary grid (e.g., the hull is always a subset of the 8 boundary points).
+
+- **`polygon_area_2d()` uses shoelace formula with integer coordinates**: Since all coordinates are in {0, 1, 2}, polygon areas are always multiples of 0.5. The function returns an `f64` but the result is always `0.0`, `0.5`, `1.0`, `1.5`, etc. — the floating-point precision is unnecessary.
+
+- **`TernaryLine::midpoint()` rounds down**: The midpoint of `(0, 0)` and `(1, 2)` is computed as `(0, 1)` rather than `(0.5, 1.5)` because coordinates are integers. This silently loses the true midpoint for most line segments.
+
+- **Voronoi ties go to the first seed**: When a grid point is equidistant from multiple seeds, it is assigned to the seed with the lowest index. The tie-breaking rule is deterministic but arbitrary — it can produce unintuitive region boundaries.
+
+- **No 3D convex hull or 3D volume computation**: The crate provides 2D convex hull and 2D polygon area but no 3D equivalents. `ternary_grid_volume()` returns the constant 27 and `ternary_grid_area()` returns 9 — they are not computed from input.
+
 ## Ecosystem
 
 Part of the **SuperInstance** ternary computing crate family:
