@@ -1,0 +1,6 @@
+[package]
+name = "ternary-geometry"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "Geometric algorithms for ternary spaces: points, lines, distance metrics, Voronoi diagrams, convex hull, area/volume computation"
