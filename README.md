@@ -142,3 +142,11 @@ Part of the **SuperInstance** ternary computing crate family:
 ## License
 
 MIT
+
+## See Also
+- **ternary-topology** — related
+- **ternary-graph** — related
+- **ternary-projection** — related
+- **ternary-pca** — related
+- **ternary-tensor** — related
+
